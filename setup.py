@@ -1,24 +1,17 @@
-from setuptools import setup
+from setuptools import setup, find_packages
+
 # To use a consistent encoding
-from codecs import open
-from os import path
-
-here = path.abspath(path.dirname(__file__))
-
-# Get the long description from the README file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
 
 setup(
     name='Dataset_Zoo',
-    packages=["Dataset_Zoo"],
-    version='1.0.0',
+    packages=["Dataset_Zoo", "Dataset_Zoo/utils",
+              "Dataset_Zoo/downloaded_datasets"],
+    version='1.0.5',
     description='Easily share datasets within your institution\
     or with the rest of the world!',
-    long_description=long_description,
     # The project's main homepage.
     url='https://github.com/IanQS/Dataset-Zoo',
-    download_url='https://github.com/peterldowns/mypackage/tarball/0.1',
+    download_url='https://github.com/IanQS/Dataset-Zoo/releases/tag/1.0.5',
 
     # Author details
     author='Ian Quah',
@@ -49,12 +42,12 @@ setup(
 
     # These will be installed by pip when
     # your project is installed.
-    install_requires=['requests', 'h5py', 'urllib2'],
+    install_requires=['requests', 'h5py'],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
     extras_require={
-        'dev': ['check-manifest'],
+        'dev': ['check-manifest', 'urllib2'],
         'test': ['coverage'],
     },
 )

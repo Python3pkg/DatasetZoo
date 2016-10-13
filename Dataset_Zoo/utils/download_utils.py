@@ -26,6 +26,10 @@ def file_exists(dataset_name, save, overwrite):
     dataset_name = dataset_name + ".h5"
     curr_dir = os.getcwd()
     dir_above = curr_dir + "/downloaded_datasets"
+    try:
+        os.mkdir(dir_above)
+    except:
+        continue
     if overwrite or dataset_name in os.listdir(dir_above):
         try:
             raise FileExistsError
@@ -57,3 +61,5 @@ def save_dataset(dataset_name, data, overwrite):
         os.chdir(curr_dir)
     with open(dataset_name, "wb") as code:
         code.write(data.content)
+
+def 

@@ -1,9 +1,20 @@
 from utils.download_utils import download_file
 from utils.download_utils import file_exists
 from utils.download_utils import save_dataset
+
+from utils.upload_utils import verify_type
+from utils.upload_utils import verify_information
+from utils.upload_utils import already_exists
+
 import h5py
 import os
 import urllib2
+
+"""
+Finish up 1/2 pip functions
+    -> set default page download
+    -> enable login?
+"""
 
 
 def download(dataset_name, save=True, overwrite=False):
@@ -49,13 +60,23 @@ def upload(dataset_name, h5py_instance):
     Takes in a dataset name to save it as, and a h5py instance
     which must fulfill the requirements above
     """
-    pass
+    if verify_type(h5py_instance) and verify_information(h5py_instance):
+        if not already_exists:
+            print("Uploading successful")
+        else:
+            print("File already exists, please email the maintainer if you\
+            have any questions")
+    else:
+        print("Please either convert the file type to a hdf5 file type,\
+        and make sure that it follows the predefined format")
 
 
 def load_dataset(dataset_name):
     """
     :p dataset HDF5 file, which we save to disk
     :t dataset string name
+
+    returns the dataset
     """
     dataset_name = dataset_name + ".h5"
     curr_dir = os.getcwd()
