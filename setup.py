@@ -3,15 +3,15 @@ from setuptools import setup, find_packages
 # To use a consistent encoding
 
 setup(
-    name='Dataset_Zoo',
-    packages=["Dataset_Zoo", "Dataset_Zoo/utils",
-              "Dataset_Zoo/downloaded_datasets"],
-    version='1.0.5',
+    name='DatasetZoo',
+    packages=["DatasetZoo", "DatasetZoo/utils",
+              "DatasetZoo/downloaded_datasets"],
+    version='1.0.0',
     description='Easily share datasets within your institution\
     or with the rest of the world!',
     # The project's main homepage.
-    url='https://github.com/IanQS/Dataset-Zoo',
-    download_url='https://github.com/IanQS/Dataset-Zoo/releases/tag/1.0.5',
+    url='https://github.com/IanQS/DatasetZoo',
+    download_url='https://github.com/IanQS/DatasetZoo/releases/tag/1.0.0',
 
     # Author details
     author='Ian Quah',

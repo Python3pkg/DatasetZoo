@@ -40,16 +40,6 @@ Make it easier for researchers to download different datasets and integrate it i
 pip install Dataset_zoo
 ```
 
-## API Reference
-
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
-
-## Built With
-
-* Dropwizard - Bla bla bla
-* Maven - Maybe
-* Atom - ergaerga
-
 ## Contributing
 
 Currently I'm very new to this process but do submit pull requests!
