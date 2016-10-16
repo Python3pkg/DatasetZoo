@@ -7,12 +7,12 @@ setup(
     packages=["DatasetZoo", "DatasetZoo/utils",
               "DatasetZoo/downloaded_datasets",
               "DatasetZoo_backend"],
-    version='1.0.1',
+    version='1.0.2',
     description='Easily share datasets within your institution\
     or with the rest of the world!',
     # The project's main homepage.
     url='https://github.com/IanQS/DatasetZoo',
-    download_url='https://github.com/IanQS/DatasetZoo/releases/tag/1.0.1',
+    download_url='https://github.com/IanQS/DatasetZoo/releases/tag/1.0.2',
 
     # Author details
     author='Ian Quah',
