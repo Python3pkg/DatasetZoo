@@ -2,16 +2,32 @@ import os
 import requests
 
 
-def download_file(dataset):
-    base = "http://"
+def download_file(dataset, source=None, login_details=None):
+    """Downloads a file from a specified base site
+
+    :param dataset: dataset name to download from source
+    :param source: valid HTML source
+    :param login_details: dict containing login + password
+    :returns: the requested dataset, or a failure
+    :rtype: h5 file
+
+    """
+    if source is None:
+        base = "http://"
+    else:
+        base = source
     data = base + dataset
     print("\nDownloading dataset. Might take a while\n")
-    data = requests.get(data)
+    try:
+        data = requests.get(data)
+    except requests.ConnectionError as e:
+        print("Could not download dataset {0} from {1}. Error message: {2}\
+        ".format(dataset, base, e))
     print("Finished downloading\n")
     return data
 
 
-def file_exists(dataset_name, save, overwrite):
+def file_exists(dataset_name, save, overwrite, dir_dataset, dir_above):
     """
     :p dataset_name: name of dataset to be downloaded
     :t dataset_name: string
@@ -24,8 +40,7 @@ def file_exists(dataset_name, save, overwrite):
     if save is False:
         return False
     dataset_name = dataset_name + ".h5"
-    curr_dir = os.getcwd()
-    dir_above = curr_dir + "/downloaded_datasets"
+    os.chdir(dir_dataset)
     try:
         os.mkdir(dir_above)
     except:
@@ -40,7 +55,7 @@ def file_exists(dataset_name, save, overwrite):
         return True
 
 
-def save_dataset(dataset_name, data, overwrite):
+def save_dataset(dataset_name, data, overwrite, path_to_dataset):
     """
     :p dataset_name name to save the dataset as
     :t dataset_name string
@@ -53,13 +68,8 @@ def save_dataset(dataset_name, data, overwrite):
     :t overwrite bool
     """
     dataset_name = dataset_name + ".h5"
-    curr_dir = os.getcwd()
-    dir_above = curr_dir + "/downloaded_datasets"
+    os.chdir(path_to_dataset)
     if overwrite:
-        os.chdir(dir_above)
         os.remove(dataset_name)
-        os.chdir(curr_dir)
     with open(dataset_name, "wb") as code:
         code.write(data.content)
-
-def 

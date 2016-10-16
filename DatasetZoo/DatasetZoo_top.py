@@ -1,3 +1,4 @@
+import utils
 from utils.download_utils import download_file
 from utils.download_utils import file_exists
 from utils.download_utils import save_dataset
@@ -8,16 +9,12 @@ from utils.upload_utils import already_exists
 
 import h5py
 import os
-import urllib2
-
-"""
-Finish up 1/2 pip functions
-    -> set default page download
-    -> enable login?
-"""
+import requests
+import inspect
 
 
-def download(dataset_name, save=True, overwrite=False):
+def download(dataset_name, save=True, overwrite=False,
+             source=None, login_details=None):
     """
     :p dataset_name name of the dataset to be downloaded
     :t dataset_name string
@@ -39,10 +36,12 @@ def download(dataset_name, save=True, overwrite=False):
     4) Misc -> any other objects that don't fall into the data. For example
     weights learning rates and so forth
     """
-    if not (file_exists(dataset_name, save, overwrite)):
-        data = download_file(dataset_name)
+    dir_above = ("/").join(inspect.getfile(utils).split("/")[:-1])
+    dir_dataset = dir_above + "/downloaded_datasets"
+    if not(file_exists(dataset_name, save, overwrite, dir_dataset, dir_above)):
+        data = download_file(dataset_name, source, login_details)
         if save:
-            save_dataset(dataset_name, data, overwrite)
+            save_dataset(dataset_name, data, overwrite, dir_dataset)
         return (h5py.File(data, 'r'))
     # ENDIF: should never get here as exception will be raised
 
@@ -79,10 +78,10 @@ def load_dataset(dataset_name):
     returns the dataset
     """
     dataset_name = dataset_name + ".h5"
-    curr_dir = os.getcwd()
-    dataset_dir = curr_dir + "/downloaded_datasets"
+    dir_above = ("/").join(inspect.getfile(utils).split("/")[:-1])
+    dir_dataset = dir_above + "/downloaded_datasets"
     try:
-        f = h5py.File(dataset_dir + dataset_name, 'r')
+        f = h5py.File(dir_dataset + dataset_name, 'r')
         return f
     except:
         print("There was an error accessing the data. Please\
@@ -91,18 +90,21 @@ def load_dataset(dataset_name):
         return None
 
 
-def list_datasets():
-    base = "http://"
-    data = urllib2.urlopen(base)
-    for line in data:
+def list_datasets(source=None):
+    if source is None:
+        base = "http://"
+    else:
+        base = source
+    data = requests.get(base)
+    for line in data.iter_lines():
         print(line)
     # Shouldn't have any access errors just because we're reading
     # from a file but keep an eye on this
     return
 
 
-def list_local_datasets():
-    curr_dir = os.getcwd()
+def list_installed_datasets():
+    curr_dir = ("/").join(inspect.getfile(utils).split("/")[:-1])
     dataset_dir = curr_dir + "/downloaded_datasets"
     for dataset in os.listdir(dataset_dir):
         print(dataset)

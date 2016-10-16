@@ -32,20 +32,3 @@ def verify_information(dataset):
         print("Please follow the format laid out. The top level should have 4\
         keys: description, X, Y and Misc")
         return False
-
-
-def already_exists():
-    # check to see if a dataset of the same name
-    # already exists, and if it does, reject it
-
-    # could make it so that it sends an email to the
-    # hosts, and notifies them that someone wants to upload
-    # a dataset
-    pass
-
-
-def pkl_to_hdf5():
-    # Look up how pkls work again,
-    # enforce some sort of order and then just
-    # create subgroups and such
-    pass
