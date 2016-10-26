@@ -37,7 +37,7 @@ Make it easier for researchers to download different datasets and integrate it i
 ## Installation
 
 ```
-pip install Dataset_zoo
+pip install DatasetZoo
 ```
 
 ## Contributing
@@ -54,4 +54,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE.txt) 
 
 ## Acknowledgments
 
-* My research advisor Amirali who encouraged me to pursue this
+* My research advisor [Amirali](http://www.amiralibagherzadeh.com/) who encouraged me to pursue this
+
+* CMUs' [Language Technologies Institute](https://www.lti.cs.cmu.edu/) and more specifically [Professor Morency](https://www.cs.cmu.edu/~morency/) for funding the hosting for the S3 instance

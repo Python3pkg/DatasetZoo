@@ -1,29 +1,57 @@
 import os
 import requests
+import sys
+from clint.textui import progress
 
 
-def download_file(dataset, source=None, login_details=None):
+def download_file(dataset, save_to, path_to_dataset,
+                  source=None, login_details=None,
+                  save=False, overwrite=False):
     """Downloads a file from a specified base site
 
-    :param dataset: dataset name to download from source
-    :param source: valid HTML source
-    :param login_details: dict containing login + password
-    :returns: the requested dataset, or a failure
-    :rtype: h5 file
-
     """
+    #########################################################
+    # Handling the user input for what to do with the files #
+    #########################################################
     if source is None:
-        base = "http://"
+        base = "https://s3.amazonaws.com/datasetzoo/datasests/"
     else:
-        base = source
+        base = source  # The user has specified own dataset source
     data = base + dataset
     print("\nDownloading dataset. Might take a while\n")
+    if save is False:
+        path = "/dev/null"
+    else:
+        path = save_to + dataset + ".h5"
+    if overwrite:
+        try:
+            os.remove(path_to_dataset + dataset + ".h5")
+        except:
+            pass
+
+    ######################################################
+    # Actually downloading the file. Done using requests #
+    ######################################################
     try:
-        data = requests.get(data)
+        data = requests.get(data, stream=True)
     except requests.ConnectionError as e:
-        print("Could not download dataset {0} from {1}. Error message: {2}\
-        ".format(dataset, base, e))
-    print("Finished downloading\n")
+        print("Could not download dataset {0} from {1}. \
+        Error message: {2} ".format(dataset, base, e))
+        sys.exit(1)
+
+    #########################################################
+    # Interesting part: technically we still save the file  #
+    # regardless, it's just if they specify not to save, we #
+    # throw it into dev/null                                #
+    #########################################################
+    with open(path, 'wb') as f:
+            total_length = int(data.headers.get('content-length'))
+            for chunk in progress.bar(
+                    data.iter_content(chunk_size=1024),
+                    expected_size=(total_length / 1024) + 1):
+                if chunk:
+                    f.write(chunk)
+                    f.flush()
     return data
 
 
@@ -44,7 +72,7 @@ def file_exists(dataset_name, save, overwrite, dir_dataset, dir_above):
     try:
         os.mkdir(dir_above)
     except:
-        continue
+        pass
     if overwrite or dataset_name in os.listdir(dir_above):
         try:
             raise FileExistsError
@@ -53,23 +81,3 @@ def file_exists(dataset_name, save, overwrite, dir_dataset, dir_above):
             Either delete it, or specify an overwrite, or don't save it")
     else:
         return True
-
-
-def save_dataset(dataset_name, data, overwrite, path_to_dataset):
-    """
-    :p dataset_name name to save the dataset as
-    :t dataset_name string
-
-    :p data h5py file
-    :t data h5py file
-
-    :p overwrite whether we should overwrite any currently existing
-    datasets with the same name
-    :t overwrite bool
-    """
-    dataset_name = dataset_name + ".h5"
-    os.chdir(path_to_dataset)
-    if overwrite:
-        os.remove(dataset_name)
-    with open(dataset_name, "wb") as code:
-        code.write(data.content)

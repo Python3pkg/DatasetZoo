@@ -32,3 +32,7 @@ def verify_information(dataset):
         print("Please follow the format laid out. The top level should have 4\
         keys: description, X, Y and Misc")
         return False
+
+
+def _upload(name, dataset):
+    pass

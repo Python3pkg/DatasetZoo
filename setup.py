@@ -7,12 +7,12 @@ setup(
     packages=["DatasetZoo", "DatasetZoo/utils",
               "DatasetZoo/downloaded_datasets",
               "DatasetZoo_backend"],
-    version='1.0.2',
+    version='1.0.3',
     description='Easily share datasets within your institution\
     or with the rest of the world!',
     # The project's main homepage.
     url='https://github.com/IanQS/DatasetZoo',
-    download_url='https://github.com/IanQS/DatasetZoo/releases/tag/1.0.2',
+    download_url='https://github.com/IanQS/DatasetZoo/releases/tag/1.0.3',
 
     # Author details
     author='Ian Quah',
@@ -36,6 +36,7 @@ setup(
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.5'
     ],
 
     # What does your project relate to?
@@ -43,7 +44,7 @@ setup(
 
     # These will be installed by pip when
     # your project is installed.
-    install_requires=['requests', 'h5py'],
+    install_requires=['requests', 'h5py', 'clint'],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,

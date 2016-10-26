@@ -1,11 +1,11 @@
 import utils
 from utils.download_utils import download_file
 from utils.download_utils import file_exists
-from utils.download_utils import save_dataset
 
 from utils.upload_utils import verify_type
 from utils.upload_utils import verify_information
 from utils.upload_utils import already_exists
+from utils.upload_utils import _upload
 
 import h5py
 import os
@@ -39,9 +39,8 @@ def download(dataset_name, save=True, overwrite=False,
     dir_above = ("/").join(inspect.getfile(utils).split("/")[:-1])
     dir_dataset = dir_above + "/downloaded_datasets"
     if not(file_exists(dataset_name, save, overwrite, dir_dataset, dir_above)):
-        data = download_file(dataset_name, source, login_details)
-        if save:
-            save_dataset(dataset_name, data, overwrite, dir_dataset)
+        data = download_file(dataset_name, source, login_details, save,
+                             dir_dataset)
         return (h5py.File(data, 'r'))
     # ENDIF: should never get here as exception will be raised
 
@@ -61,6 +60,7 @@ def upload(dataset_name, h5py_instance):
     """
     if verify_type(h5py_instance) and verify_information(h5py_instance):
         if not already_exists:
+            _upload(dataset_name, h5py_instance)
             print("Uploading successful")
         else:
             print("File already exists, please email the maintainer if you\
@@ -92,7 +92,7 @@ def load_dataset(dataset_name):
 
 def list_datasets(source=None):
     if source is None:
-        base = "http://"
+        base = "https://s3.amazonaws.com/dataset-zoo/Datasets/dataset_list.txt"
     else:
         base = source
     data = requests.get(base)
