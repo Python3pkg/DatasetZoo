@@ -40,7 +40,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords=['research datasets download upload'],
+    keywords=['research datasets download'],
 
     # These will be installed by pip when
     # your project is installed.

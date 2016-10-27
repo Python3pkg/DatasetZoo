@@ -2,11 +2,11 @@ import os
 import requests
 import sys
 from clint.textui import progress
+import h5py
 
 
 def download_file(dataset, save_to, path_to_dataset,
-                  source=None, login_details=None,
-                  save=False, overwrite=False):
+                  source=None, login_details=None, overwrite=False):
     """Downloads a file from a specified base site
 
     """
@@ -19,10 +19,6 @@ def download_file(dataset, save_to, path_to_dataset,
         base = source  # The user has specified own dataset source
     data = base + dataset
     print("\nDownloading dataset. Might take a while\n")
-    if save is False:
-        path = "/dev/null"
-    else:
-        path = save_to + dataset + ".h5"
     if overwrite:
         try:
             os.remove(path_to_dataset + dataset + ".h5")
@@ -33,7 +29,7 @@ def download_file(dataset, save_to, path_to_dataset,
     # Actually downloading the file. Done using requests #
     ######################################################
     try:
-        data = requests.get(data, stream=True)
+        data = requests.get(data)
     except requests.ConnectionError as e:
         print("Could not download dataset {0} from {1}. \
         Error message: {2} ".format(dataset, base, e))
@@ -44,14 +40,19 @@ def download_file(dataset, save_to, path_to_dataset,
     # regardless, it's just if they specify not to save, we #
     # throw it into dev/null                                #
     #########################################################
-    with open(path, 'wb') as f:
-            total_length = int(data.headers.get('content-length'))
-            for chunk in progress.bar(
-                    data.iter_content(chunk_size=1024),
-                    expected_size=(total_length / 1024) + 1):
-                if chunk:
+    with open("/dev/null", 'w') as f:
+        total_length = int(data.headers.get('content-length'))
+        for chunk in progress.bar(
+                data.iter_content(chunk_size=1024),
+                expected_size=(total_length / 1024) + 1):
+            if chunk:
                     f.write(chunk)
                     f.flush()
+    f = open(save_to + dataset + ".h5", "w")
+    f.write(data.content)
+    f.close()
+
+    data = h5py.File("test_h5.h5", "r")
     return data
 
 
