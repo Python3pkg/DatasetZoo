@@ -33,15 +33,12 @@ def __download_file(dataset_name, path_to_dataset,
     # Actually downloading the file. Done using requests #
     ######################################################
     try:
-        print("Trying to download data")
-        data = requests.get(data)
-        print("Managed to download the data")
+        data = requests.get(data, stream=True)
     except:
         print("Could not download dataset {0} from {1}. \
         Error message: {2} ".format(dataset_name, base))
         sys.exit(1)
 
-    print("Path we're saving it in: ", path_to_dataset + dataset_name)
     with open(path_to_dataset + dataset_name, 'w') as f:
         total_length = int(data.headers.get('content-length'))
         for chunk in progress.bar(
@@ -66,13 +63,11 @@ def __dataset_exists(dataset_name, save, overwrite, dataset_dir):
 
     """
     import os
-    if save is False:
-        return False
     dataset_name = dataset_name
     if dataset_name in os.listdir(dataset_dir):
-        if not(overwrite):
-            raise FileExistsError
+        if overwrite:
+            return False
         else:
-            return True
+            raise True
     else:
-        return True
+        return False
