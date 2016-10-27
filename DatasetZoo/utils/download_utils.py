@@ -1,23 +1,32 @@
-import os
-import requests
-import sys
-from clint.textui import progress
-import h5py
 
 
-def download_file(dataset, path_to_dataset,
-                  source=None, login_details=None, overwrite=False):
-    """Downloads a file from a specified base site
+def __download_file(dataset_name, path_to_dataset,
+                    source=None, login_details=None,
+                    overwrite=False):
+    """Download the specified file
+
+    :param dataset_name: string: name of dataset to download. Include .h5
+    :param path_to_dataset: string: valid local path to save to
+    :param source: string: valid url to download from
+    :param login_details: dict : login details
+    :param overwrite: bool
+    :returns: dataset
+    :rtype: h5 file
 
     """
+    import requests
+    import sys
+    from clint.textui import progress
+    import h5py
+
     #########################################################
     # Handling the user input for what to do with the files #
     #########################################################
     if source is None:
-        base = "https://s3.amazonaws.com/datasetzoo/datasests/"
+        base = "https://s3.amazonaws.com/datasetzoo/datasets/"
     else:
         base = source  # The user has specified own dataset source
-    data = base + dataset
+    data = base + dataset_name
     print("\nDownloading dataset. Might take a while\n")
 
     ######################################################
@@ -25,42 +34,34 @@ def download_file(dataset, path_to_dataset,
     ######################################################
     try:
         data = requests.get(data)
-    except requests.ConnectionError as e:
-        print("Could not download dataset {0} from {1}. \
-        Error message: {2} ".format(dataset, base, e))
-        sys.exit(1)
-
-    #########################################################
-    # Interesting part: technically we still save the file  #
-    # regardless, it's just if they specify not to save, we #
-    # throw it into dev/null                                #
-    #########################################################
-    with open("/dev/null", 'w') as f:
-        total_length = int(data.headers.get('content-length'))
-        for chunk in progress.bar(
-                data.iter_content(chunk_size=1024),
-                expected_size=(total_length / 1024) + 1):
-            if chunk:
+        with open(path_to_dataset + dataset_name, 'w') as f:
+            total_length = int(data.headers.get('content-length'))
+            for chunk in progress.bar(
+                    data.iter_content(chunk_size=1024),
+                    expected_size=(total_length / 1024) + 1):
+                if chunk:
                     f.write(chunk)
                     f.flush()
-    f = open(path_to_dataset + dataset, "w")
-    f.write(data.content)
-    f.close()
+        data = h5py.File(path_to_dataset + dataset_name, "r")
+        return data
+    except:
+        print("Could not download dataset {0} from {1}. \
+        Error message: {2} ".format(dataset_name, base))
+        sys.exit(1)
 
-    data = h5py.File(path_to_dataset + dataset, "r")
-    return data
 
+def __dataset_exists(dataset_name, save, overwrite, dataset_dir):
+    """ Returns whether dataset_name exists locally
 
-def file_exists(dataset_name, save, overwrite, dataset_dir):
+    :param dataset_name: string: name of dataset to be downloaded, with .h5
+    :param save: bool: whether to save
+    :param overwrite: bool: whether to overwrite if local one exists
+    :param dataset_dir: string: valid local path to check
+    :returns: whether dataset_name exists locally
+    :rtype: bool
+
     """
-    :p dataset_name: name of dataset to be downloaded
-    :t dataset_name: string
-
-    :p overwrite: whether the data should be overwritten. if not, we crash.
-    :t overwrite: bool
-
-    returns if the dataset_name file exists in the downloaded_datasets dir
-    """
+    import os
     if save is False:
         return False
     dataset_name = dataset_name

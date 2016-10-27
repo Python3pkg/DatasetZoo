@@ -1,18 +1,17 @@
-from setuptools import setup, find_packages
+from setuptools import setup  # , find_packages
 
 # To use a consistent encoding
 
-version='1.1.1'
+version = '1.2.0'
 
 packages = [
     "DatasetZoo",
     "DatasetZoo.utils",
-    "DatasetZoo.download_datasets"]
+    "DatasetZoo.downloaded_datasets"]
 
 setup(
     name='DatasetZoo',
     packages=packages,
-#    ,"DatasetZoo_backend"],
     version=version,
     description='Easily share datasets within your institution\
     or with the rest of the world!',
