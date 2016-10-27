@@ -1,4 +1,3 @@
-import utils
 from utils.download_utils import download_file
 from utils.download_utils import file_exists
 
@@ -12,7 +11,7 @@ from utils.upload_utils import _upload
 import h5py
 import os
 import requests
-import inspect
+import os.path
 
 
 def download(dataset_name, save=True, overwrite=False,
@@ -38,12 +37,10 @@ def download(dataset_name, save=True, overwrite=False,
     4) Misc -> any other objects that don't fall into the data. For example
     weights learning rates and so forth
     """
-    dir_above = ("/").join(inspect.getfile(utils).split("/")[:-1])
-    #@TODO: remove line below
-    print("Dir above is: ", dir_above)
-    dir_dataset = dir_above + "/downloaded_datasets"
-    if not(file_exists(dataset_name, save, overwrite, dir_dataset, dir_above)):
-        data = download_file(dataset_name, save, dir_dataset,
+    curr_dir = os.path.dirname(__file__)
+    dataset_dir = curr_dir + "/downloaded_datasets/"
+    if not(file_exists(dataset_name, save, overwrite, dataset_dir)):
+        data = download_file(dataset_name, dataset_dir,
                              source, login_details, save)
         return data
     # ENDIF: should never hit here as we'll error out within download_utils
@@ -81,11 +78,10 @@ def load_dataset(dataset_name):
 
     returns the dataset
     """
-    dataset_name = dataset_name + ".h5"
-    dir_above = ("/").join(inspect.getfile(utils).split("/")[:-1])
-    dir_dataset = dir_above + "/downloaded_datasets"
+    curr_dir = os.path.dirname(__file__)
+    dataset_dir = curr_dir + "/downloaded_datasets/"
     try:
-        f = h5py.File(dir_dataset + dataset_name, 'r')
+        f = h5py.File(dataset_dir + dataset_name, 'r')
         return f
     except:
         print("There was an error accessing the data. Please\
@@ -96,7 +92,7 @@ def load_dataset(dataset_name):
 
 def list_datasets(source=None):
     if source is None:
-        base = "https://s3.amazonaws.com/dataset-zoo/Datasets/dataset_list.txt"
+        base = "https://s3.amazonaws.com/datasetzoo/datasets/dataset_list.txt"
     else:
         base = source
     data = requests.get(base)
@@ -106,8 +102,8 @@ def list_datasets(source=None):
 
 
 def list_installed_datasets():
-    curr_dir = ("/").join(inspect.getfile(utils).split("/")[:-1])
-    dataset_dir = curr_dir + "/downloaded_datasets"
+    curr_dir = os.path.dirname(__file__)
+    dataset_dir = curr_dir + "/downloaded_datasets/"
     for dataset in os.listdir(dataset_dir):
         print(dataset)
     return
