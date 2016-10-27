@@ -35,9 +35,12 @@ def download(dataset_name, save=True, overwrite=False,
     import os
     curr_dir = os.path.dirname(__file__)
     dataset_dir = curr_dir + "/downloaded_datasets/"
+    print(dataset_dir)
     if not(__dataset_exists(dataset_name, save, overwrite, dataset_dir)):
+        print("passed exist check")
         data = __download_file(dataset_name, dataset_dir,
                                source, login_details, save)
+        print("Passed the download function")
         return data
     # ENDIF: should never hit here as we'll error out within download_utils
 
@@ -119,7 +122,7 @@ def list_local_datasets():
     if len(os.listdir(dataset_dir)) == 0:
         print("No datasets installed yet")
     else:
-        for dataset in os.listdir(dataset_dir + dir):
+        for dataset in os.listdir(dataset_dir):
             if ".py" not in dataset or ".pyc" not in dataset:
                 print(dataset)
     return

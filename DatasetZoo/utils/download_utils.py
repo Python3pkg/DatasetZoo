@@ -33,21 +33,25 @@ def __download_file(dataset_name, path_to_dataset,
     # Actually downloading the file. Done using requests #
     ######################################################
     try:
+        print("Trying to download data")
         data = requests.get(data)
-        with open(path_to_dataset + dataset_name, 'w') as f:
-            total_length = int(data.headers.get('content-length'))
-            for chunk in progress.bar(
-                    data.iter_content(chunk_size=1024),
-                    expected_size=(total_length / 1024) + 1):
-                if chunk:
-                    f.write(chunk)
-                    f.flush()
-        data = h5py.File(path_to_dataset + dataset_name, "r")
-        return data
+        print("Managed to download the data")
     except:
         print("Could not download dataset {0} from {1}. \
         Error message: {2} ".format(dataset_name, base))
         sys.exit(1)
+
+    print("Path we're saving it in: ", path_to_dataset + dataset_name)
+    with open(path_to_dataset + dataset_name, 'w') as f:
+        total_length = int(data.headers.get('content-length'))
+        for chunk in progress.bar(
+                data.iter_content(chunk_size=1024),
+                expected_size=(total_length / 1024) + 1):
+            if chunk:
+                f.write(chunk)
+                f.flush()
+    data = h5py.File(path_to_dataset + dataset_name, "r")
+    return data
 
 
 def __dataset_exists(dataset_name, save, overwrite, dataset_dir):
