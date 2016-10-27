@@ -2,7 +2,7 @@ from setuptools import setup  # , find_packages
 
 # To use a consistent encoding
 
-version = '1.2.4'
+version = '1.2.6'
 
 packages = [
     "DatasetZoo",

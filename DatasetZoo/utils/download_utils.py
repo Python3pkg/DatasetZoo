@@ -51,11 +51,10 @@ def __download_file(dataset_name, path_to_dataset,
     return data
 
 
-def __dataset_exists(dataset_name, save, overwrite, dataset_dir):
+def __dataset_exists(dataset_name, overwrite, dataset_dir):
     """ Returns whether dataset_name exists locally
 
     :param dataset_name: string: name of dataset to be downloaded, with .h5
-    :param save: bool: whether to save
     :param overwrite: bool: whether to overwrite if local one exists
     :param dataset_dir: string: valid local path to check
     :returns: whether dataset_name exists locally
@@ -68,6 +67,6 @@ def __dataset_exists(dataset_name, save, overwrite, dataset_dir):
         if overwrite:
             return False
         else:
-            raise True
+            return True
     else:
         return False
