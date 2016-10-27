@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='DatasetZoo',
-    packages=["utils", "downloaded_datasets"]
+    packages=["utils", "downloaded_datasets"],
 #    ,"DatasetZoo_backend"],
     version='1.0.4',
     description='Easily share datasets within your institution\
