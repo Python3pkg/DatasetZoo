@@ -2,20 +2,23 @@ from setuptools import setup, find_packages
 
 # To use a consistent encoding
 
+version='1.1.1'
+
+packages = [
+    "DatasetZoo",
+    "DatasetZoo.utils",
+    "DatasetZoo.download_datasets"]
+
 setup(
     name='DatasetZoo',
-    packages=[
-        "DatasetZoo",
-        "DatasetZoo/utils",
-        "DatasetZoo/downloaded_datasets"],
+    packages=packages,
 #    ,"DatasetZoo_backend"],
-    version='1.1.1',
+    version=version,
     description='Easily share datasets within your institution\
     or with the rest of the world!',
     # The project's main homepage.
     url='https://github.com/IanQS/DatasetZoo',
-    download_url='https://github.com/IanQS/DatasetZoo/releases/tag/1.1.1',
-
+    download_url='https://github.com/IanQS/DatasetZoo/releases/tag/' + version,
     # Author details
     author='Ian Quah',
     author_email='itq@andrew.cmu.edu',
