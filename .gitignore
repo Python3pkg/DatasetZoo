@@ -1,0 +1,6 @@
+# Folders that are annoying
+DatasetZoo.egg-info/
+dist/
+
+#File extensions
+*.pyc
