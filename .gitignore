@@ -4,3 +4,4 @@ dist/
 
 #File extensions
 *.pyc
+*.cdt
