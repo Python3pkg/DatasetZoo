@@ -6,6 +6,7 @@ version = '1.2.6'
 
 packages = [
     "DatasetZoo",
+    "CFT",
     "DatasetZoo.utils",
     "DatasetZoo.downloaded_datasets"]
 
