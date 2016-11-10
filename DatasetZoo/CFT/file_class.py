@@ -5,7 +5,7 @@ import sys
 try:
     from StringIO import StringIO
 except:
-    from io as StringIO
+    from io import StringIO
 
 class CDT(object):
     """
@@ -54,7 +54,7 @@ class CDT(object):
     def write(self):
         f = open(self.filename + ".cdt", "w")
         data = self.data
-        if offset_length is None:
+        if self.OFFSET_LENGTH is None:
             print("Setting offset length to default of 12")
             self.OFFSET_LENGTH = 12
         # error checking
