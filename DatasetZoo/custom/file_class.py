@@ -10,15 +10,14 @@ class CDT(object):
     Functions to allow us to interact with a CDT file: a
     custom data type. Acts as a wrapper on a file
     """
-    def __init__(self, data, filename, offset_length=None, version=0):
+    def __init__(self, filename, data = None, offset_length=None, version=0):
         self.data = data
         self.filename = filename
         self.__initialized = False  # Only useful when writing
         self.__version = 0
         self.__index = {}
-        if offset_length is None:
-            print("Setting offset length to default of 12")
-            self.OFFSET_LENGTH = offset_length
+        self.OFFSET_LENGTH = offset_length
+
 
     def __datum_write(self, datum, f):
         start = f.tell()
@@ -39,7 +38,6 @@ class CDT(object):
             f.write(str(datum[1]))
             inst_type = "list"
         else:
-            f.write(datum[1])
             try:
                 print(type(datum), "is currently not explicitly supported" +
                       "Contact the maintainer if there are any issues")
@@ -52,18 +50,21 @@ class CDT(object):
         self.__index[datum[0]] = (start, f.tell() - start, inst_type)
 
     def write(self):
-        f = open(self.filename + ".cdt", "a")
+        f = open(self.filename + ".cdt", "w")
         data = self.data
+        if offset_length is None:
+            print("Setting offset length to default of 12")
+            self.OFFSET_LENGTH = 12
         # error checking
         assert hasattr(data, '__iter__'), "Type data must be an iterable"
         if self.__initialized is False:
             f.write(self.filename + str(self.__version))
             self.__initialized = True
-            self.__version += 1
+
         # Actual saving
         for datum in data:
             assert hasattr(datum, '__iter__'), \
-                "Type data must be an iterable"
+                "individual elements of data must be iterable"
             assert (len(datum) == 2), "elements of data, must have length 2,\
             where the first element is the name, and the second is the data"
             self.__datum_write(datum, f)
@@ -80,7 +81,7 @@ class CDT(object):
 
     def read(self, key):
         try:
-            f = open(self.data)
+            f = open(self.filename + ".cdt")
         except:
             print("File doesn't exist")
             sys.exit(1)
@@ -89,10 +90,11 @@ class CDT(object):
         f.seek(-1 * (self.OFFSET_LENGTH), 2)
         index_offset = int(f.read())
         f.seek(index_offset)
-        index = json.load(f.read()[: -1 * self.OFFSET_LENGTH])
+        boundary = f.read()[: -1 * self.OFFSET_LENGTH]
+        ind = json.loads(boundary)
 
         # Getting the details of the key of interest
-        start, length, inst_type = index[key]
+        start, length, inst_type = ind[key]
         f.seek(start)
         fo = StringIO(f.read(length))
         f.close()
@@ -107,7 +109,7 @@ class CDT(object):
 
     def list_keys(self):
         try:
-            f = open(self.data)
+            f = open(self.filename + ".cdt")
         except:
             print("File doesn't exist")
             sys.exit(1)
@@ -119,17 +121,3 @@ class CDT(object):
         index = json.loads(f.read()[: -1 * self.OFFSET_LENGTH])
 
         print(index.keys())
-
-
-"""
-            inst_type = "string"
-        elif isinstance(datum[1], types.DictionaryType):
-            json.dump(datum[1], f)
-            inst_type = "dict"
-        elif isinstance(datum[1], types.IntType):
-            f.write(str(datum[1]))
-            inst_type = "int"
-        elif isinstance(datum[1], types.ListType):
-            f.write(str(datum[1]))
-            inst_type = "list"
-"""
