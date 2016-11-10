@@ -12,11 +12,10 @@ class CDT(object):
     Functions to allow us to interact with a CDT file: a
     custom data type. Acts as a wrapper on a file
     """
-    def __init__(self, filename, data = None, offset_length=None, version=0):
+    def __init__(self, filename, data = None, offset_length=None):
         self.data = data
         self.filename = filename
         self.__initialized = False  # Only useful when writing
-        self.__version = 0
         self.__index = {}
         self.OFFSET_LENGTH = offset_length
 
@@ -24,8 +23,10 @@ class CDT(object):
     def __datum_write(self, datum, f):
         start = f.tell()
         inst_type = None
-        if type(datum[1]).__module__ == "numpy":
-            np.save(f, datum[1], allow_pickle=False)
+        if str(type(datum[1])).find("numpy") != -1:
+            print("Please note that only .npy files can be saved. .npz files\
+             cannot be saved as we have disabled pickling")
+            np.save(f, np.asarray(datum[1]), allow_pickle=False)
             inst_type = "numpy"
         elif isinstance(datum[1], types.StringType):
             f.write(datum[1])
@@ -42,7 +43,7 @@ class CDT(object):
         else:
             try:
                 print(type(datum), "is currently not explicitly supported" +
-                      "Contact the maintainer if there are any issues")
+                      ". Contact the maintainer if there are any issues")
                 f.write(datum[1])
             except:
                 print("There was an error trying to write type: ", type(datum),
@@ -71,7 +72,6 @@ class CDT(object):
             where the first element is the name, and the second is the data"
             self.__datum_write(datum, f)
 
-        print("Note: we do not support altering a .cdt file yet")
         index_offset = f.tell()
         json.dump(self.__index, f)
         f.write(str(index_offset).zfill(self.OFFSET_LENGTH))
@@ -123,3 +123,4 @@ class CDT(object):
         index = json.loads(f.read()[: -1 * self.OFFSET_LENGTH])
 
         print(index.keys())
+        return(index.keys())
