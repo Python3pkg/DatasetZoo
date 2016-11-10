@@ -2,11 +2,11 @@ from setuptools import setup  # , find_packages
 
 # To use a consistent encoding
 
-version = '1.3.0'
+version = '1.4.1'
 
 packages = [
     "DatasetZoo",
-    "CFT",
+    "DatasetZoo.CFT",
     "DatasetZoo.utils",
     "DatasetZoo.downloaded_datasets"]
 

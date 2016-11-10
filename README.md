@@ -6,13 +6,10 @@ The technological advantage of this project is that it provides a lighweight int
 
 From a research point of view, the less time you spend looking for datasets, and the less time you need to spend understanding how they work, the faster you can proceed with your work.
 
-From a contributors point of view, by hosting your dataset online, you don't need to worry about 
-
-1) login details, as we handle it for you (not available at this time)
-
-### The upload functionality is not working as of now. If you have any suggestions on how to run a backend (some sort of server that can register users, keep track of permissions and such), do submit a pull request, or email me.
+#### The upload functionality is not working as of now. If you have any suggestions on how to run a backend (some sort of server that can register users, keep track of permissions and such), do submit a pull request, or email me.
 
 ## Code Example
+
 
 ```
 import DatasetZoo.dzoo_client as dz
