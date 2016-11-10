@@ -1,9 +1,11 @@
 import numpy as np
 import json
-from StringIO import StringIO
 import types
 import sys
-
+try:
+    from StringIO import StringIO
+except:
+    from io as StringIO
 
 class CDT(object):
     """
