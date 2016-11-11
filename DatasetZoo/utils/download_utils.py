@@ -1,3 +1,5 @@
+# coding: utf-8
+#!/usr/bin/env python
 
 
 def __download_file(dataset_name, path_to_dataset,
@@ -5,19 +7,19 @@ def __download_file(dataset_name, path_to_dataset,
                     overwrite=False):
     """Download the specified file
 
-    :param dataset_name: string: name of dataset to download. Include .h5
+    :param dataset_name: string: name of dataset to download. Include .cdt
     :param path_to_dataset: string: valid local path to save to
     :param source: string: valid url to download from
     :param login_details: dict : login details
     :param overwrite: bool
     :returns: dataset
-    :rtype: h5 file
+    :rtype: cdt file
 
     """
     import requests
     import sys
     from clint.textui import progress
-    import h5py
+    from CFT.file_class import CDT
 
     #########################################################
     # Handling the user input for what to do with the files #
@@ -47,14 +49,14 @@ def __download_file(dataset_name, path_to_dataset,
             if chunk:
                 f.write(chunk)
                 f.flush()
-    data = h5py.File(path_to_dataset + dataset_name, "r")
+    data = CDT(filename=(path_to_dataset + dataset_name))
     return data
 
 
 def __dataset_exists(dataset_name, overwrite, dataset_dir):
     """ Returns whether dataset_name exists locally
 
-    :param dataset_name: string: name of dataset to be downloaded, with .h5
+    :param dataset_name: string: name of dataset to be downloaded, with .cdt
     :param overwrite: bool: whether to overwrite if local one exists
     :param dataset_dir: string: valid local path to check
     :returns: whether dataset_name exists locally
@@ -62,7 +64,9 @@ def __dataset_exists(dataset_name, overwrite, dataset_dir):
 
     """
     import os
-    dataset_name = dataset_name
+    if dataset_name[-4::] == ".cdt":
+        dataset_name = dataset_name[:-4]
+    dataset_name = dataset_name + ".cdt"
     if dataset_name in os.listdir(dataset_dir):
         if overwrite:
             return False

@@ -7,18 +7,19 @@ try:
 except:
     from io import StringIO
 
+
 class CDT(object):
     """
     Functions to allow us to interact with a CDT file: a
     custom data type. Acts as a wrapper on a file
     """
-    def __init__(self, filename, data = None, offset_length=None):
+
+    def __init__(self, filename, data=None):
         self.data = data
         self.filename = filename
-        self.__initialized = False  # Only useful when writing
+        self.__initialized = False
         self.__index = {}
-        self.OFFSET_LENGTH = offset_length
-
+        self.OFFSET_LENGTH = 20
 
     def __datum_write(self, datum, f):
         start = f.tell()
@@ -55,9 +56,6 @@ class CDT(object):
     def write(self):
         f = open(self.filename + ".cdt", "w")
         data = self.data
-        if self.OFFSET_LENGTH is None:
-            print("Setting offset length to default of 12")
-            self.OFFSET_LENGTH = 12
         # error checking
         assert hasattr(data, '__iter__'), "Type data must be an iterable"
         if self.__initialized is False:

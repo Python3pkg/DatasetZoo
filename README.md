@@ -14,7 +14,7 @@ from DatasetZoo.CFT.file_class import CDT
 
 ### Custom data tyoe
 
-```
+
 Creating a CDT instance
 ```
 
@@ -35,7 +35,7 @@ Reading with a CDT instance
 easy_data = CDT(filename="data.cdt")
 easy_data.list_keys()  # select one of them
 easy_data.read("valid_key")
-
+```
 
 ### Dataset Zoo itself
 

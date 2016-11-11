@@ -14,8 +14,7 @@ setup(
     name='DatasetZoo',
     packages=packages,
     version=version,
-    description='Easily share datasets within your institution\
-    or with the rest of the world!',
+    description='Easily share datasets within your institution or with the rest of the world!',
     # The project's main homepage.
     url='https://github.com/IanQS/DatasetZoo',
     download_url='https://github.com/IanQS/DatasetZoo/releases/tag/' + version,
