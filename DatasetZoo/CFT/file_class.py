@@ -59,7 +59,7 @@ class CDT(object):
         # error checking
         assert hasattr(data, '__iter__'), "Type data must be an iterable"
         if self.__initialized is False:
-            f.write(self.filename + str(self.__version))
+            f.write(self.filename)
             self.__initialized = True
 
         # Actual saving

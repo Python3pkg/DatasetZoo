@@ -70,7 +70,6 @@ def load_dataset(dataset_name):
         Use list_installed_datasets to view what is installed locally\n\
         Else please download the appropriate dataset")
         return None
-        
 
 
 def list_remote_datasets(source=None):
