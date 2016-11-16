@@ -13,6 +13,12 @@ from utils.upload_utils import _upload
 """
 
 
+def __fix_name(dataset_name):
+    if dataset_name[-4::] == ".cdt":
+        dataset_name = dataset_name[:-4]
+    return (dataset_name + ".cdt")
+
+
 def download(dataset_name, save=True, overwrite=False,
              source=None, login_details=None):
     """
@@ -35,16 +41,15 @@ def download(dataset_name, save=True, overwrite=False,
     5) Special thanks: PI, Lab, University
     """
     import os
-    curr_dir = os.path.dirname(__file__)
-    dataset_dir = curr_dir + "/downloaded_datasets/"
-    if dataset_name[-4::] == ".cdt":
-        dataset_name = dataset_name[:-4]
+    home_path = os.path.expanduser("~")
+    dataset_dir = home_path + "/.downloaded_datasets/"
+    dataset_name = __fix_name(dataset_name)
     if __dataset_exists(dataset_name, overwrite, dataset_dir):
         return load_dataset(dataset_name)
     else:
-        data = __download_file(dataset_name, dataset_dir,
-                               source, login_details, save)
-        return data
+        __download_file(dataset_name, dataset_dir,
+                        source, login_details, save)
+        return load_dataset(dataset_name)
     # ENDIF: should never hit here as we'll error out within download_utils
 
 
@@ -57,13 +62,11 @@ def load_dataset(dataset_name):
     """
     import os.path
     from CFT.file_class import CDT
-    curr_dir = os.path.dirname(__file__)
-    dataset_dir = curr_dir + "/downloaded_datasets/"
-    if dataset_name[-4::] == ".cdt":
-        dataset_name = dataset_name[:-4]
+    home_path = os.path.expanduser("~")
+    dataset_dir = home_path + "/.downloaded_datasets/"
+    dataset_name = __fix_name(dataset_name)
     try:
-        f = CDT(filename=dataset_name)
-        f = open(dataset_dir + dataset_name, 'r')
+        f = CDT(filename=dataset_dir + dataset_name)
         return f
     except:
         print("There was an error accessing the data. \n\
@@ -82,7 +85,7 @@ def list_remote_datasets(source=None):
     """
     import requests
     if source is None:
-        base = "https://s3.amazonaws.com/datasetzoo/datasets/dataset_list.txt"
+        base = "https://s3.us-east-2.amazonaws.com/datasetzoo/datasets/dataset_list.txt"
     else:
         base = source
     data = requests.get(base)
@@ -98,14 +101,11 @@ def list_local_datasets():
     :rtype: None
     """
     import os.path
-    curr_dir = os.path.dirname(__file__)
-    dataset_dir = curr_dir + "/downloaded_datasets/"
+    home_path = os.path.expanduser("~")
+    dataset_dir = home_path + "/.downloaded_datasets/"
     if len(os.listdir(dataset_dir)) == 0:
         print("No datasets downloaded yet")
     else:
         for dataset in os.listdir(dataset_dir):
-            if (".py" in dataset) or (".pyc" in dataset):
-                continue
-            else:
-                print(dataset)
+            print(dataset)
     return

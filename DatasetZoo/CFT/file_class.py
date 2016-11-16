@@ -16,18 +16,18 @@ class CDT(object):
 
     def __init__(self, filename, data=None):
         self.data = data
-        self.filename = filename
         self.__initialized = False
         self.__index = {}
-        self.OFFSET_LENGTH = 20
+        self.OFFSET_LENGTH = 12
+        if filename[-4::] == ".cdt":
+            filename = filename[:-4]
+        self.filename = filename + ".cdt"
 
     def __datum_write(self, datum, f):
         start = f.tell()
         inst_type = None
         if str(type(datum[1])).find("numpy") != -1:
-            print("Please note that only .npy files can be saved. .npz files\
-             cannot be saved as we have disabled pickling")
-            np.save(f, np.asarray(datum[1]), allow_pickle=False)
+            np.save(f, datum[1], allow_pickle=True)
             inst_type = "numpy"
         elif isinstance(datum[1], types.StringType):
             f.write(datum[1])
@@ -47,14 +47,15 @@ class CDT(object):
                       ". Contact the maintainer if there are any issues")
                 f.write(datum[1])
             except:
-                print("There was an error trying to write type: ", type(datum),
-                      "Please create an issue on github")
+                print("There was an error trying to write type: " +
+                      type(datum) +
+                      ". Please create an issue on github")
                 raise
 
         self.__index[datum[0]] = (start, f.tell() - start, inst_type)
 
     def write(self):
-        f = open(self.filename + ".cdt", "w")
+        f = open(self.filename, "w")
         data = self.data
         # error checking
         assert hasattr(data, '__iter__'), "Type data must be an iterable"
@@ -75,13 +76,9 @@ class CDT(object):
         f.write(str(index_offset).zfill(self.OFFSET_LENGTH))
         f.close()
 
-    def modify(self):
-        print("Modify is not implemented yet")
-        pass
-
     def read(self, key):
         try:
-            f = open(self.filename + ".cdt")
+            f = open(self.filename)
         except:
             print("File doesn't exist")
             sys.exit(1)
@@ -109,7 +106,7 @@ class CDT(object):
 
     def list_keys(self):
         try:
-            f = open(self.filename + ".cdt")
+            f = open(self.filename)
         except:
             print("File doesn't exist")
             sys.exit(1)

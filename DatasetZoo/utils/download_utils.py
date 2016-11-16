@@ -19,23 +19,22 @@ def __download_file(dataset_name, path_to_dataset,
     import requests
     import sys
     from clint.textui import progress
-    from CFT.file_class import CDT
 
     #########################################################
     # Handling the user input for what to do with the files #
     #########################################################
     if source is None:
-        base = "https://s3.amazonaws.com/datasetzoo/datasets/"
+        base = "https://s3.us-east-2.amazonaws.com/datasetzoo/datasets/"
+        base = "https://s3.us-east-2.amazonaws.com/datasetzoo/datasets/"
     else:
         base = source  # The user has specified own dataset source
-    data = base + dataset_name
+    data_src = base + dataset_name
     print("\nDownloading dataset. Might take a while\n")
-
     ######################################################
     # Actually downloading the file. Done using requests #
     ######################################################
     try:
-        data = requests.get(data, stream=True)
+        data = requests.get(data_src, stream=True)
     except:
         print("Could not download dataset {0} from {1}. \
         Error message: {2} ".format(dataset_name, base))
@@ -49,7 +48,6 @@ def __download_file(dataset_name, path_to_dataset,
             if chunk:
                 f.write(chunk)
                 f.flush()
-    data = CDT(filename=(path_to_dataset + dataset_name))
     return data
 
 
@@ -64,9 +62,6 @@ def __dataset_exists(dataset_name, overwrite, dataset_dir):
 
     """
     import os
-    if dataset_name[-4::] == ".cdt":
-        dataset_name = dataset_name[:-4]
-    dataset_name = dataset_name + ".cdt"
     if dataset_name in os.listdir(dataset_dir):
         if overwrite:
             return False
