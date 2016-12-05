@@ -7,6 +7,10 @@ try:
 except:
     from io import StringIO
 
+def __check_extension(filename):
+    if filename[-4::] == ".cdt":
+        filename = filename[:-4]
+    return (filename + ".cdt")
 
 class CDT(object):
     """
@@ -19,9 +23,7 @@ class CDT(object):
         self.__initialized = False
         self.__index = {}
         self.OFFSET_LENGTH = 12
-        if filename[-4::] == ".cdt":
-            filename = filename[:-4]
-        self.filename = filename + ".cdt"
+        self.filename = __check_extension(filename)
 
     def __datum_write(self, datum, f):
         start = f.tell()
@@ -115,7 +117,7 @@ class CDT(object):
         f.seek(-1 * (self.OFFSET_LENGTH), 2)
         index_offset = int(f.read())
         f.seek(index_offset)
-        index = json.loads(f.read()[: -1 * self.OFFSET_LENGTH])
+        index_ = json.loads(f.read()[: -1 * self.OFFSET_LENGTH])
 
-        print(index.keys())
-        return(index.keys())
+        print(index_.keys())
+        return(index_.keys())
