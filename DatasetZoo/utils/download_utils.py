@@ -1,19 +1,28 @@
-# coding: utf-8
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 
-def __download_file(dataset_name, path_to_dataset,
-                    source=None, login_details=None,
-                    overwrite=False):
-    """Download the specified file
+def __download_file(dataset_name, path_to_dataset, source=None,
+        login_details=None, overwrite=False):
+    """Download the dataset_name from source, and save it to path_to_dataset
 
-    :param dataset_name: string: name of dataset to download. Include .cdt
-    :param path_to_dataset: string: valid local path to save to
-    :param source: string: valid url to download from
-    :param login_details: dict : login details
-    :param overwrite: bool
-    :returns: dataset
-    :rtype: cdt file
+    Args:
+        dataset_name (str): name of the dataset to download. Must be valid and
+        exist on the remote repo. For debugging purposes: must include .cdt but
+        our __fix_name function in dzoo_client should handle it
+
+        path_to_dataset (str): valid local path to store all the data to
+
+    Kwargs:
+        source (string):valid URL containing the dataset
+
+        login_details (json): not implemented yet. Should interface with boto
+        amazon plugin if the dataset is still stored on S3
+
+        overwrite (bool): whether to overwrite any local datasets if conflicts.
+
+    Returns:
+        (data): non-fixed data type
 
     """
     import requests
@@ -24,7 +33,6 @@ def __download_file(dataset_name, path_to_dataset,
     # Handling the user input for what to do with the files #
     #########################################################
     if source is None:
-        base = "https://s3.us-east-2.amazonaws.com/datasetzoo/datasets/"
         base = "https://s3.us-east-2.amazonaws.com/datasetzoo/datasets/"
     else:
         base = source  # The user has specified own dataset source
@@ -52,13 +60,18 @@ def __download_file(dataset_name, path_to_dataset,
 
 
 def __dataset_exists(dataset_name, overwrite, dataset_dir):
-    """ Returns whether dataset_name exists locally
+    """Returns whether the dataset_name exists locally in dataset_dir
 
-    :param dataset_name: string: name of dataset to be downloaded, with .cdt
-    :param overwrite: bool: whether to overwrite if local one exists
-    :param dataset_dir: string: valid local path to check
-    :returns: whether dataset_name exists locally
-    :rtype: bool
+    Args:
+        dataset_name (string): name of dataset to be downloaded. Must contain a
+        .cdt
+
+        overwrite (string): whether to overwrite if local one exists
+
+        dataset_dir (string): valid local path
+
+    Returns:
+        (bool) whether the dataset exists locally
 
     """
     import os

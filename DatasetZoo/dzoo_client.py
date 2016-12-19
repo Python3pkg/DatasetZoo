@@ -1,5 +1,5 @@
-# coding: utf-8
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 
 from utils.download_utils import __download_file
@@ -14,25 +14,25 @@ from utils.upload_utils import _upload
 
 
 def __fix_name(dataset_name):
-    if dataset_name[-4::] == ".cdt":
+    if dataset_name[-4::] == ".cft":
         dataset_name = dataset_name[:-4]
-    return (dataset_name + ".cdt")
+    return (dataset_name + ".cft")
 
 
 def download(dataset_name, save=True, overwrite=False,
              source=None, login_details=None):
     """
 
-    :param dataset_name: string: name of dataset to download. Include .cdt
+    :param dataset_name: string: name of dataset to download. Include .cft
     :param save: bool: whether to save the data
     :param overwrite: bool: whether to overwrite if we find conflict
     :param source: string: valid url to download from
     :param login_details: dict : login details
 
     :returns: dataset
-    :rtype: cdt instance
+    :rtype: cft instance
 
-    returns a single CDT object which must have 4 top level groups
+    returns a single CfT object which must have 4 top level groups
     1) description of the dataset, how to use
     2) X's -> test, train and validation if any (must be specified in 1)
     3) Y's -> test, train and validation if any (must be specified in 1)
@@ -55,18 +55,18 @@ def download(dataset_name, save=True, overwrite=False,
 
 def load_dataset(dataset_name):
     """
-    :p dataset cdt file, which we saved to disk
+    :p dataset cft file, which we saved to disk
     :t dataset string name
 
     returns the dataset
     """
     import os.path
-    from CFT.file_class import CDT
+    from CFT.file_class import CFT
     home_path = os.path.expanduser("~")
     dataset_dir = home_path + "/.downloaded_datasets/"
     dataset_name = __fix_name(dataset_name)
     try:
-        f = CDT(filename=dataset_dir + dataset_name)
+        f = CFT(filename=dataset_dir + dataset_name)
         return f
     except:
         print("There was an error accessing the data. \n\
@@ -85,7 +85,8 @@ def list_remote_datasets(source=None):
     """
     import requests
     if source is None:
-        base = "https://s3.us-east-2.amazonaws.com/datasetzoo/datasets/dataset_list.txt"
+        base = "https://s3.us-east-2.amazonaws.com/"
+        base = base + "datasetzoo/datasets/dataset_list.txt"
     else:
         base = source
     data = requests.get(base)
