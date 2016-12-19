@@ -10,32 +10,35 @@ From a research point of view, the less time you spend looking for datasets, and
 
 ## Code Example
 
-from DatasetZoo.CFT.file_class import CDT
+from DatasetZoo.CFT.file_class import CFT
 
 ### Custom data tyoe
 
 
-Creating a CDT instance
+Creating a CFT instance
 ```
 
-easy_data = CDT(filename="data.cdt")
+easy_data = CFT(filename="data.cft")
 
 ```
-Writing with a CDT instance
+Writing with a CFT instance
 ```
 my_data = some_list_of_lists  # first element is key, and the second is value, all wrapped up into a list within a larger list
 
-easy_data = CDT(filename="data.cdt", data=my_data)
+easy_data = CFT(filename="data.cft", data=my_data)
 easy_data.write()
 
 ```
-Reading with a CDT instance
+Reading with a CFT instance
 ```
 
-easy_data = CDT(filename="data.cdt")
+easy_data = CFT(filename="data.cft")
 easy_data.list_keys()  # select one of them
 easy_data.read("valid_key")
 ```
+
+The data is loaded in lazily, and should avoid any serialization issues (precision issues + issues with
+misshappen data). If there are any issues please open an issue on Github.
 
 ### Dataset Zoo itself
 
@@ -72,7 +75,7 @@ After burning hours into searching for datasets, only to spend more time having 
 
 2) a uniform, easily understandable format to manage datasets
 
-which led to many problems involving Pickling (questions of safety), and HDF5 (where it was hard to add datasets beyond just numpy arrays), and thus the CDT/CFT was born. CDT and CFT stand for custom data type and custom file type, and it provides you with an interface to act on the dataset, calling different sections of the data as if they were all processed and loaded into a clean dictionary on your local machine
+which led to many problems involving Pickling (questions of safety), and HDF5 (where it was hard to add datasets beyond just numpy arrays), and thus the CFT was born. CFT stands for custom file type, and it provides you with an interface to act on the dataset, calling different sections of the data as if they were all processed and loaded into a clean dictionary on your local machine
 
 ## Installation
 
@@ -92,8 +95,4 @@ Currently I'm very new to this process but do submit pull requests!
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.txt) file for details
 
-## Acknowledgments
-
 * My research advisor [Amirali](http://www.amiralibagherzadeh.com/) who encouraged me to pursue this
-
-* CMUs' [Language Technologies Institute](https://www.lti.cs.cmu.edu/) and more specifically [Professor Morency](https://www.cs.cmu.edu/~morency/) for funding the S3 instance that hosts our datasets.
