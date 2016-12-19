@@ -1,24 +1,11 @@
 import json
 import types
 import sys
+import numpy as np
 try:
     from StringIO import StringIO
 except:
     from io import StringIO
-
-
-def __check_extension(filename):
-    """Formats input filenames to be what we need
-
-    Args:
-        filename (string): file name
-
-    Returns:
-        (string): formatted filename
-    """
-    if filename[-4::] == ".cft":
-        filename = filename[:-4]
-    return (filename + ".cft")
 
 
 class CFT(object):
@@ -27,6 +14,18 @@ class CFT(object):
     during transferring datasets. Note that this just abstracts the different
     types of files, it doesn't serve as an optimized filetype
     """
+    def __check_extension(self, filename):
+        """Formats input filenames to be what we need
+
+        Args:
+            filename (string): file name
+
+        Returns:
+            (string): formatted filename
+        """
+        if filename[-4::] == ".cft":
+            filename = filename[:-4]
+        return (filename + ".cft")
 
     def __init__(self, filename, data=None):
         """Initialize things?
@@ -44,7 +43,7 @@ class CFT(object):
         self.__initialized = False
         self.__index = {}
         self.OFFSET_LENGTH = 12
-        self.filename = __check_extension(filename)
+        self.filename = self.__check_extension(filename)
 
     def __datum_write(self, datum, f):
         """Write individual "information chunk". Useful if a dataset contains
@@ -147,8 +146,7 @@ class CFT(object):
         f.close()
         if inst_type == "numpy":
             from N_encoder import json_numpy_obj_hook
-            fo = json.load(fo)
-            return (json.loads(fo, object_hook=json_numpy_obj_hook))
+            return np.asarray(json.load(fo, object_hook=json_numpy_obj_hook))
         elif inst_type == "dict":
             return json.load(fo)
         elif inst_type == "string":

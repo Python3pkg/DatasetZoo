@@ -20,7 +20,7 @@ class NumpyEncoder(json.JSONEncoder):
 
         """
 
-        if isinstance(obj, np.ndarray) and obj.dim == 1:
+        if isinstance(obj, np.ndarray) and obj.ndim == 1:
             return obj.tolist()
         elif isinstance(obj, np.generic):
             return obj.item()
