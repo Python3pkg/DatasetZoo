@@ -23,7 +23,19 @@ easy_data = CFT(filename="data.cft")
 ```
 Writing with a CFT instance
 ```
-my_data = some_list_of_lists  # first element is key, and the second is value, all wrapped up into a list within a larger list
+
+
+json_test = {"test": [1, 2, 3, 4], "test2": "COWSCOWSCOWS"}
+
+numpy_test_one = np.zeros((100))
+
+numpy_test_two = np.ones((10,20, 30))
+
+numpy_test_three = np.load("DatasetZoo/test.npy")
+print(numpy_test_two.shape)
+
+all_data = [["json_dat", json_test], ["n_one", numpy_test_one],
+            ["n_two", numpy_test_two], ["n_three", numpy_test_three]]
 
 easy_data = CFT(filename="data.cft", data=my_data)
 easy_data.write()
@@ -40,7 +52,7 @@ easy_data.read("valid_key")
 The data is loaded in lazily, and should avoid any serialization issues (precision issues + issues with
 misshappen data). If there are any issues please open an issue on Github.
 
-### Dataset Zoo itself
+### Dataset Zoo
 
 
 ```
