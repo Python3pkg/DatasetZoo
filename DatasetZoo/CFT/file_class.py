@@ -3,7 +3,7 @@ import types
 import sys
 import numpy as np
 try:
-    from StringIO import StringIO
+    from io import StringIO
 except:
     from io import StringIO
 
@@ -60,30 +60,30 @@ class CFT(object):
         start = f.tell()
         inst_type = None
         if str(type(datum[1])).find("numpy") != -1:
-            from N_encoder import NumpyEncoder
+            from .N_encoder import NumpyEncoder
             json.dump(datum[1], f, cls=NumpyEncoder)
             inst_type = "numpy"
-        elif isinstance(datum[1], types.StringType):
+        elif isinstance(datum[1], bytes):
             f.write(datum[1])
             inst_type = "string"
-        elif isinstance(datum[1], types.DictionaryType):
+        elif isinstance(datum[1], dict):
             json.dump(datum[1], f)
             inst_type = "dict"
-        elif isinstance(datum[1], types.IntType):
+        elif isinstance(datum[1], int):
             f.write(str(datum[1]))
             inst_type = "int"
-        elif isinstance(datum[1], types.ListType):
+        elif isinstance(datum[1], list):
             f.write(str(datum[1]))
             inst_type = "list"
         else:
             try:
-                print(type(datum), "is currently not explicitly supported" +
-                      ". Contact the maintainer if there are any issues")
+                print((type(datum), "is currently not explicitly supported" +
+                      ". Contact the maintainer if there are any issues"))
                 f.write(datum[1])
             except:
-                print("There was an error trying to write type: " +
+                print(("There was an error trying to write type: " +
                       type(datum) +
-                      ". Please create an issue on github")
+                      ". Please create an issue on github"))
                 raise
 
         self.__index[datum[0]] = (start, f.tell() - start, inst_type)
@@ -145,7 +145,7 @@ class CFT(object):
         fo = StringIO(f.read(length))
         f.close()
         if inst_type == "numpy":
-            from N_encoder import json_numpy_obj_hook
+            from .N_encoder import json_numpy_obj_hook
             return np.asarray(json.load(fo, object_hook=json_numpy_obj_hook))
         elif inst_type == "dict":
             return json.load(fo)
@@ -173,5 +173,5 @@ class CFT(object):
         f.seek(index_offset)
         index_ = json.loads(f.read()[: -1 * self.OFFSET_LENGTH])
 
-        print(index_.keys())
-        return(index_.keys())
+        print((list(index_.keys())))
+        return(list(index_.keys()))

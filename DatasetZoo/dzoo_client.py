@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 
-from utils.download_utils import __download_file
-from utils.download_utils import __dataset_exists
+from .utils.download_utils import __download_file
+from .utils.download_utils import __dataset_exists
 
 """
 from utils.upload_utils import verify_type
@@ -61,7 +61,7 @@ def load_dataset(dataset_name):
     returns the dataset
     """
     import os.path
-    from CFT.file_class import CFT
+    from .CFT.file_class import CFT
     home_path = os.path.expanduser("~")
     dataset_dir = home_path + "/.downloaded_datasets/"
     dataset_name = __fix_name(dataset_name)

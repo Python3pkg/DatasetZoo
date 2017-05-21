@@ -44,8 +44,8 @@ def __download_file(dataset_name, path_to_dataset, source=None,
     try:
         data = requests.get(data_src, stream=True)
     except:
-        print("Could not download dataset {0} from {1}. \
-        Error message: {2} ".format(dataset_name, base))
+        print(("Could not download dataset {0} from {1}. \
+        Error message: {2} ".format(dataset_name, base)))
         sys.exit(1)
 
     with open(path_to_dataset + dataset_name, 'w') as f:
